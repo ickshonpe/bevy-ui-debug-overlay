@@ -9,6 +9,7 @@ categories = ["game-development", "gui", "development-tools"]
 authors = ["David Curthoys <david.curthoys@gmail.com>"]
 repository = "https://github.com/ickshonpe/bevy-ui-debug-overlay"
 homepage = "https://github.com/ickshonpe/bevy-ui-debug-overlay"
+documentation = "https://docs.rs/bevy-ui-debug-overlay"
 readme = "README.md"
 
 [dependencies]
