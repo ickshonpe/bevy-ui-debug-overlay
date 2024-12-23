@@ -50,7 +50,7 @@ impl Default for UiDebugOverlay {
     }
 }
 
-#[allow(clippy::too_many_arguments)]
+#[allow(clippy::too_many_arguments, clippy::type_complexity)]
 pub fn extract_debug_overlay(
     mut commands: Commands,
     debug_overlay: Extract<Res<UiDebugOverlay>>,
