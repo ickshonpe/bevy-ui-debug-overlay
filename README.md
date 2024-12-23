@@ -16,7 +16,7 @@ bevy-ui-debug-overlay = "0.1"
 
 Add the plugin to your bevy project :
 ```
-// This is from the `debug_overlay.rs` example included with this crate.
+// From the included `debug_overlay.rs` example
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, UiDebugOverlayPlugin))
