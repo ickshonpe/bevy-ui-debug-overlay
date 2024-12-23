@@ -1,0 +1,15 @@
+[package]
+name = "bevy-ui-debug-overlay"
+version = "0.1.0"
+edition = "2021"
+keywords = ["bevy", "ui", "debug"]
+license = "MIT OR Apache-2.0"
+description = "Debug overlay for Bevy UI."
+categories = ["game-development", "gui", "development-tools"]
+authors = ["David Curthoys <david.curthoys@gmail.com>"]
+repository = "https://github.com/ickshonpe/bevy-ui-debug-overlay"
+homepage = "https://github.com/ickshonpe/bevy-ui-debug-overlay"
+readme = "README.md"
+
+[dependencies]
+bevy = "0.15.0"
