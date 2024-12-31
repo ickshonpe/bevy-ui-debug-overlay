@@ -1,33 +1,40 @@
-use bevy::app::Plugin;
-use bevy::asset::AssetId;
-use bevy::color::Hsla;
-use bevy::ecs::entity::Entity;
-use bevy::ecs::system::Commands;
-use bevy::ecs::system::Query;
-use bevy::ecs::system::Res;
-use bevy::ecs::system::ResMut;
-use bevy::ecs::system::Resource;
-use bevy::math::Rect;
-use bevy::math::Vec2;
-use bevy::render::sync_world::RenderEntity;
-use bevy::render::sync_world::TemporaryRenderEntity;
-use bevy::render::Extract;
-use bevy::render::ExtractSchedule;
-use bevy::render::RenderApp;
-use bevy::sprite::BorderRect;
-use bevy::transform::components::GlobalTransform;
+use bevy_app::Plugin;
+use bevy_asset::AssetId;
+use bevy_color::Hsla;
+#[cfg(feature = "bevy_reflect")]
+use bevy_ecs::reflect::ReflectResource;
+use bevy_ecs::entity::Entity;
+use bevy_ecs::system::Commands;
+use bevy_ecs::system::Query;
+use bevy_ecs::system::Res;
+use bevy_ecs::system::ResMut;
+use bevy_ecs::system::Resource;
+use bevy_math::Rect;
+use bevy_math::Vec2;
+use bevy_render::sync_world::RenderEntity;
+use bevy_render::sync_world::TemporaryRenderEntity;
+use bevy_render::Extract;
+use bevy_render::ExtractSchedule;
+use bevy_render::RenderApp;
+use bevy_sprite::BorderRect;
+use bevy_transform::components::GlobalTransform;
 
-use bevy::ui::ComputedNode;
-use bevy::ui::DefaultUiCamera;
+use bevy_ui::ComputedNode;
+use bevy_ui::DefaultUiCamera;
 
-use bevy::ui::ExtractedUiItem;
-use bevy::ui::ExtractedUiNode;
-use bevy::ui::ExtractedUiNodes;
-use bevy::ui::NodeType;
-use bevy::ui::TargetCamera;
+use bevy_ui::ExtractedUiItem;
+use bevy_ui::ExtractedUiNode;
+use bevy_ui::ExtractedUiNodes;
+use bevy_ui::NodeType;
+use bevy_ui::TargetCamera;
 
 /// Configuration for the UI debug overlay
 #[derive(Resource)]
+#[cfg_attr(
+    feature = "bevy_reflect",
+    derive(bevy_reflect::Reflect),
+    reflect(Resource)
+)]
 pub struct UiDebugOverlay {
     /// Set to true to enable the UI debug overlay
     pub enabled: bool,
@@ -114,7 +121,9 @@ pub fn extract_debug_overlay(
 pub struct UiDebugOverlayPlugin;
 
 impl Plugin for UiDebugOverlayPlugin {
-    fn build(&self, app: &mut bevy::prelude::App) {
+    fn build(&self, app: &mut bevy_app::App) {
+        #[cfg(feature = "bevy_reflect")]
+        app.register_type::<UiDebugOverlay>();
         app.init_resource::<UiDebugOverlay>();
 
         if let Some(render_app) = app.get_sub_app_mut(RenderApp) {

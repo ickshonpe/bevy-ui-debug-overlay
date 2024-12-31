@@ -314,6 +314,16 @@ name = "bevy-ui-debug-overlay"
 version = "0.1.1"
 dependencies = [
  "bevy",
+ "bevy_app",
+ "bevy_asset",
+ "bevy_color",
+ "bevy_ecs",
+ "bevy_math",
+ "bevy_reflect",
+ "bevy_render",
+ "bevy_sprite",
+ "bevy_transform",
+ "bevy_ui",
 ]
 
 [[package]]
