@@ -73,6 +73,9 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                             parent.spawn((Text::new(
                                 "Press S to toggle outlines for hidden UI nodes.",
                             ),));
+                            parent.spawn((Text::new(
+                                "Press C to toggle outlines for clipped UI nodes.",
+                            ),));
                         });
                 });
             // right vertical fill
@@ -339,6 +342,11 @@ fn toggle_debug_overlay(
     if input.just_pressed(KeyCode::KeyS) {
         // Toggle debug outlines for nodes with `ViewVisibility` set to false.
         debug_overlay.show_hidden = !debug_overlay.show_hidden;
+    }
+
+    if input.just_pressed(KeyCode::KeyC) {
+        // Toggle outlines for clipped UI nodes.
+        debug_overlay.show_clipped = !debug_overlay.show_clipped;
     }
 
     if input.just_pressed(KeyCode::KeyV) {

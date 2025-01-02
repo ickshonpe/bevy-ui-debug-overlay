@@ -19,6 +19,7 @@ use bevy_render::ExtractSchedule;
 use bevy_render::RenderApp;
 use bevy_sprite::BorderRect;
 use bevy_transform::components::GlobalTransform;
+use bevy_ui::CalculatedClip;
 use bevy_ui::ComputedNode;
 use bevy_ui::DefaultUiCamera;
 
@@ -40,8 +41,10 @@ pub struct UiDebugOverlay {
     pub enabled: bool,
     /// Width of the overlay's lines in logical pixels
     pub line_width: f32,
-    /// Show non-visible UI nodes
+    /// Show outlines for non-visible UI nodes
     pub show_hidden: bool,
+    /// Show outlines for clipped sections of UI nodes
+    pub show_clipped: bool,
 }
 
 impl UiDebugOverlay {
@@ -56,6 +59,7 @@ impl Default for UiDebugOverlay {
             enabled: false,
             line_width: 1.,
             show_hidden: false,
+            show_clipped: false,
         }
     }
 }
@@ -71,6 +75,7 @@ pub fn extract_debug_overlay(
             Entity,
             &ComputedNode,
             &ViewVisibility,
+            Option<&CalculatedClip>,
             &GlobalTransform,
             Option<&TargetCamera>,
         )>,
@@ -81,7 +86,7 @@ pub fn extract_debug_overlay(
         return;
     }
 
-    for (entity, uinode, visibility, transform, camera) in &uinode_query {
+    for (entity, uinode, visibility, maybe_clip, transform, camera) in &uinode_query {
         if !debug_overlay.show_hidden && !visibility.get() {
             continue;
         }
@@ -106,7 +111,9 @@ pub fn extract_debug_overlay(
                     min: Vec2::ZERO,
                     max: uinode.size(),
                 },
-                clip: None,
+                clip: maybe_clip
+                    .filter(|_| !debug_overlay.show_clipped)
+                    .map(|clip| clip.clip),
                 image: AssetId::default(),
                 camera_entity: render_camera_entity,
                 item: ExtractedUiItem::Node {
