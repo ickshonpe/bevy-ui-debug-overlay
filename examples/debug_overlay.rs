@@ -66,6 +66,13 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
                             // Debug overlay text
                             parent.spawn((Text::new("Press Space to toggle the debug overlay."),));
+
+                            parent.spawn((Text::new(
+                                "Press V to toggle the UI hierarchy's visibility.",
+                            ),));
+                            parent.spawn((Text::new(
+                                "Press S to toggle outlines for hidden UI nodes.",
+                            ),));
                         });
                 });
             // right vertical fill
@@ -322,10 +329,23 @@ pub fn update_scroll_position(
 fn toggle_debug_overlay(
     input: Res<ButtonInput<KeyCode>>,
     mut debug_overlay: ResMut<UiDebugOverlay>,
+    mut root_node_query: Query<&mut Visibility, (With<Node>, Without<Parent>)>,
 ) {
     if input.just_pressed(KeyCode::Space) {
         // The toggle method will enable the debug overlay if disabled and disable if enabled
         debug_overlay.toggle();
+    }
+
+    if input.just_pressed(KeyCode::KeyS) {
+        // Toggle debug outlines for nodes with `ViewVisibility` set to false.
+        debug_overlay.show_hidden = !debug_overlay.show_hidden;
+    }
+
+    if input.just_pressed(KeyCode::KeyV) {
+        for mut visibility in root_node_query.iter_mut() {
+            // Toggle the UI root node's visibility
+            visibility.toggle_inherited_hidden();
+        }
     }
 }
 

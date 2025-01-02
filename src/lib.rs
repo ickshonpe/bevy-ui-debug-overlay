@@ -13,12 +13,12 @@ use bevy_math::Rect;
 use bevy_math::Vec2;
 use bevy_render::sync_world::RenderEntity;
 use bevy_render::sync_world::TemporaryRenderEntity;
+use bevy_render::view::ViewVisibility;
 use bevy_render::Extract;
 use bevy_render::ExtractSchedule;
 use bevy_render::RenderApp;
 use bevy_sprite::BorderRect;
 use bevy_transform::components::GlobalTransform;
-
 use bevy_ui::ComputedNode;
 use bevy_ui::DefaultUiCamera;
 
@@ -40,6 +40,8 @@ pub struct UiDebugOverlay {
     pub enabled: bool,
     /// Width of the overlay's lines in logical pixels
     pub line_width: f32,
+    /// Show non-visible UI nodes
+    pub show_hidden: bool,
 }
 
 impl UiDebugOverlay {
@@ -53,6 +55,7 @@ impl Default for UiDebugOverlay {
         Self {
             enabled: false,
             line_width: 1.,
+            show_hidden: false,
         }
     }
 }
@@ -67,6 +70,7 @@ pub fn extract_debug_overlay(
         Query<(
             Entity,
             &ComputedNode,
+            &ViewVisibility,
             &GlobalTransform,
             Option<&TargetCamera>,
         )>,
@@ -77,7 +81,11 @@ pub fn extract_debug_overlay(
         return;
     }
 
-    for (entity, uinode, transform, camera) in &uinode_query {
+    for (entity, uinode, visibility, transform, camera) in &uinode_query {
+        if !debug_overlay.show_hidden && !visibility.get() {
+            continue;
+        }
+
         let Some(camera_entity) = camera.map(TargetCamera::entity).or(default_ui_camera.get())
         else {
             continue;
