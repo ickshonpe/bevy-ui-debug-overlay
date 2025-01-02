@@ -12,7 +12,10 @@ use std::f32::consts::PI;
 
 fn main() {
     App::new()
-        .add_plugins((DefaultPlugins, UiDebugOverlayPlugin))
+        .add_plugins((
+            DefaultPlugins,
+            UiDebugOverlayPlugin::start_enabled().with_line_width(2.),
+        ))
         .add_systems(Startup, (setup, debug_overlay_setup))
         .add_systems(Update, (update_scroll_position, toggle_debug_overlay))
         .run();

@@ -1,9 +1,9 @@
 use bevy_app::Plugin;
 use bevy_asset::AssetId;
 use bevy_color::Hsla;
+use bevy_ecs::entity::Entity;
 #[cfg(feature = "bevy_reflect")]
 use bevy_ecs::reflect::ReflectResource;
-use bevy_ecs::entity::Entity;
 use bevy_ecs::system::Commands;
 use bevy_ecs::system::Query;
 use bevy_ecs::system::Res;
@@ -118,13 +118,35 @@ pub fn extract_debug_overlay(
     }
 }
 
-pub struct UiDebugOverlayPlugin;
+#[derive(Default)]
+pub struct UiDebugOverlayPlugin(pub UiDebugOverlay);
+
+impl UiDebugOverlayPlugin {
+    /// Start the app with the debug overlay disabled
+    pub fn start_disabled() -> Self {
+        Default::default()
+    }
+
+    /// Start the app with the debug overlay enabled
+    pub fn start_enabled() -> Self {
+        Self(UiDebugOverlay {
+            enabled: true,
+            ..Default::default()
+        })
+    }
+
+    /// Set the debug overlay's line width in logical pixels
+    pub fn with_line_width(mut self, line_width: f32) -> Self {
+        self.0.line_width = line_width;
+        self
+    }
+}
 
 impl Plugin for UiDebugOverlayPlugin {
     fn build(&self, app: &mut bevy_app::App) {
         #[cfg(feature = "bevy_reflect")]
         app.register_type::<UiDebugOverlay>();
-        app.init_resource::<UiDebugOverlay>();
+        app.insert_resource(UiDebugOverlay { ..self.0 });
 
         if let Some(render_app) = app.get_sub_app_mut(RenderApp) {
             render_app.add_systems(ExtractSchedule, extract_debug_overlay);
