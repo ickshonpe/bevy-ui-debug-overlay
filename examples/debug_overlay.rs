@@ -22,7 +22,7 @@ fn main() {
 }
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn((Camera2d, IsDefaultUiCamera, UiBoxShadowSamples(6)));
+    commands.spawn((Camera2d, IsDefaultUiCamera, BoxShadowSamples(6)));
 
     commands
         .spawn(Node {
