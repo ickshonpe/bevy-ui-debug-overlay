@@ -330,7 +330,7 @@ pub fn update_scroll_position(
 fn toggle_debug_overlay(
     input: Res<ButtonInput<KeyCode>>,
     mut debug_overlay: ResMut<UiDebugOverlay>,
-    mut root_node_query: Query<&mut Visibility, (With<Node>, Without<Parent>)>,
+    mut root_node_query: Query<&mut Visibility, (With<Node>, Without<ChildOf>)>,
 ) {
     if input.just_pressed(KeyCode::Space) {
         // The toggle method will enable the debug overlay if disabled and disable if enabled
