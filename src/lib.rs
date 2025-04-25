@@ -4,11 +4,11 @@ use bevy_color::Hsla;
 use bevy_ecs::entity::Entity;
 #[cfg(feature = "bevy_reflect")]
 use bevy_ecs::reflect::ReflectResource;
+use bevy_ecs::resource::Resource;
 use bevy_ecs::system::Commands;
 use bevy_ecs::system::Query;
 use bevy_ecs::system::Res;
 use bevy_ecs::system::ResMut;
-use bevy_ecs::system::Resource;
 use bevy_math::Rect;
 use bevy_math::Vec2;
 use bevy_render::sync_world::RenderEntity;
@@ -27,7 +27,7 @@ use bevy_ui::ExtractedUiItem;
 use bevy_ui::ExtractedUiNode;
 use bevy_ui::ExtractedUiNodes;
 use bevy_ui::NodeType;
-use bevy_ui::TargetCamera;
+use bevy_ui::UiTargetCamera;
 
 /// Configuration for the UI debug overlay
 #[derive(Resource)]
@@ -77,7 +77,7 @@ pub fn extract_debug_overlay(
             &ViewVisibility,
             Option<&CalculatedClip>,
             &GlobalTransform,
-            Option<&TargetCamera>,
+            Option<&UiTargetCamera>,
         )>,
     >,
     mapping: Extract<Query<RenderEntity>>,
@@ -91,7 +91,9 @@ pub fn extract_debug_overlay(
             continue;
         }
 
-        let Some(camera_entity) = camera.map(TargetCamera::entity).or(default_ui_camera.get())
+        let Some(camera_entity) = camera
+            .map(UiTargetCamera::entity)
+            .or(default_ui_camera.get())
         else {
             continue;
         };
@@ -115,13 +117,13 @@ pub fn extract_debug_overlay(
                     .filter(|_| !debug_overlay.show_clipped)
                     .map(|clip| clip.clip),
                 image: AssetId::default(),
-                camera_entity: render_camera_entity,
+                extracted_camera_entity: render_camera_entity,
                 item: ExtractedUiItem::Node {
                     atlas_scaling: None,
                     transform: transform.compute_matrix(),
                     flip_x: false,
                     flip_y: false,
-                    border: BorderRect::square(
+                    border: BorderRect::all(
                         debug_overlay.line_width / uinode.inverse_scale_factor(),
                     ),
                     border_radius: uinode.border_radius(),
