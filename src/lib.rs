@@ -126,6 +126,7 @@ pub fn extract_debug_overlay(
                 node_type: NodeType::Border,
             },
             main_entity: entity.into(),
+            render_entity: commands.spawn(TemporaryRenderEntity).id(),
         });
     }
 }
